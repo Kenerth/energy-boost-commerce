@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Zap, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useAuth } from '@/context/AuthContext';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,17 +12,22 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Demo login – admin shortcut
-    if (email === 'admin@volt.com' && password === 'admin') {
-      toast.success('Bienvenido, Administrador');
-      navigate('/admin');
-      return;
+    const success = login(email, password);
+    if (success) {
+      if (email === 'admin@volt.com' || email === 'vendedor@volt.com' || email === 'cliente@volt.com') {
+        toast.success(`Bienvenido, ${email.split('@')[0]}`);
+        if (email === 'admin@volt.com') navigate('/admin');
+        else if (email === 'vendedor@volt.com') navigate('/vendedor');
+        else navigate('/');
+      } else {
+        toast.success(isLogin ? '¡Bienvenido de vuelta!' : '¡Cuenta creada exitosamente!');
+        navigate('/');
+      }
     }
-    toast.success(isLogin ? '¡Bienvenido de vuelta!' : '¡Cuenta creada exitosamente!');
-    navigate('/');
   };
 
   return (
@@ -79,9 +85,14 @@ const Login = () => {
             {isLogin ? 'ENTRAR' : 'REGISTRARSE'} <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
 
-          <p className="text-center text-xs text-muted-foreground">
-            Demo admin: <code className="text-primary">admin@volt.com / admin</code>
-          </p>
+          <div className="space-y-2 text-xs text-muted-foreground">
+            <p className="text-center">Cuentas de prueba:</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              <code className="text-primary bg-secondary px-1.5 py-0.5 rounded">admin@volt.com / admin</code>
+              <code className="text-primary bg-secondary px-1.5 py-0.5 rounded">vendedor@volt.com / vendedor</code>
+              <code className="text-primary bg-secondary px-1.5 py-0.5 rounded">cliente@volt.com / cliente</code>
+            </div>
+          </div>
 
           <button
             type="button"

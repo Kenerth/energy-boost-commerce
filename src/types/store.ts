@@ -6,6 +6,7 @@ export interface Product {
   image: string;
   category: Category;
   stock: number;
+  minStock: number;
   volume: string;
   caffeine: string;
   featured?: boolean;
@@ -37,4 +38,19 @@ export interface Order {
   userId: string;
 }
 
-export type UserRole = 'customer' | 'admin';
+export type UserRole = 'cliente' | 'admin' | 'vendedor';
+
+export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+
+export interface Order {
+  id: string;
+  items: CartItem[];
+  subtotal: number;
+  tax: number;
+  total: number;
+  status: OrderStatus;
+  date: string;
+  userId: string;
+  customerName?: string;
+  customerEmail?: string;
+}
