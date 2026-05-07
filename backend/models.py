@@ -55,8 +55,8 @@ class Categoria(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), unique=True, nullable=False)
-    descripcion = db.Column(db.String(200))
-    icono = db.Column(db.String(20))
+    descripcion = db.Column(db.String(200), nullable=True)
+    icono = db.Column(db.String(20), nullable=True)
     
     # Relación con productos
     productos = db.relationship('Producto', backref='categoria', lazy=True)

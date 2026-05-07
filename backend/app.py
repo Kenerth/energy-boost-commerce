@@ -15,6 +15,7 @@ from models import db, Usuario, Categoria, Producto
 
 # Importar blueprints
 from api import auth_bp
+from api.products import products_bp
 
 
 def create_app(config_name='default'):
@@ -31,6 +32,7 @@ def create_app(config_name='default'):
     
     # Registrar blueprints
     app.register_blueprint(auth_bp)
+    app.register_blueprint(products_bp)
     
     # Ruta de health check
     @app.route('/api/health')
