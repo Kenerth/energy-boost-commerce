@@ -1,15 +1,25 @@
 export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: Category;
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio_base: number;
+  precio_descuento: number;
+  precio: number;
+  tiene_descuento: boolean;
+  imagen: string;
+  categoria: CategoryInfo | null;
   stock: number;
-  minStock: number;
-  volume: string;
-  caffeine: string;
+  min_stock: number;
+  volumen: string;
+  cafeina: string;
   featured?: boolean;
+}
+
+export interface CategoryInfo {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  icono: string;
 }
 
 export type Category = 'clasicas' | 'sin-azucar' | 'tropicales' | 'premium' | 'shots';
@@ -27,30 +37,17 @@ export interface CartItem {
   quantity: number;
 }
 
-export interface Order {
-  id: string;
-  items: CartItem[];
-  subtotal: number;
-  tax: number;
-  total: number;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered';
-  date: string;
-  userId: string;
-}
-
 export type UserRole = 'cliente' | 'admin' | 'vendedor';
 
 export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 
 export interface Order {
-  id: string;
+  id: number;
   items: CartItem[];
   subtotal: number;
   tax: number;
   total: number;
   status: OrderStatus;
   date: string;
-  userId: string;
-  customerName?: string;
-  customerEmail?: string;
+  userId: number;
 }

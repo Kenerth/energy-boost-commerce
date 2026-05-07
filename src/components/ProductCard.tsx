@@ -58,7 +58,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <Button
-          onClick={() => addItem(product)}
+          onClick={() => addItem(product.id)}
           className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-heading text-xs tracking-wider"
           size="sm"
         >

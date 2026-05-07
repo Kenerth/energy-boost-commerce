@@ -19,6 +19,7 @@ from api.products import products_bp
 from api.cart import cart_bp
 from api.orders import orders_bp
 from api.reports import reports_bp
+from api.providers import providers_bp
 
 
 def create_app(config_name='default'):
@@ -30,7 +31,7 @@ def create_app(config_name='default'):
     
     # Inicializar extensiones
     db.init_app(app)
-    CORS(app)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
     JWTManager(app)
     
     # Registrar blueprints
@@ -39,6 +40,7 @@ def create_app(config_name='default'):
     app.register_blueprint(cart_bp)
     app.register_blueprint(orders_bp)
     app.register_blueprint(reports_bp)
+    app.register_blueprint(providers_bp)
     
     # Ruta de health check
     @app.route('/api/health')

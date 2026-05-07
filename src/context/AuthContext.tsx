@@ -1,60 +1,94 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export type UserRole = 'cliente' | 'admin' | 'vendedor';
 
 export interface User {
-  id: string;
-  name: string;
+  id: number;
+  nombre: string;
   email: string;
-  role: UserRole;
+  rol: UserRole;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
   logout: () => void;
   isAuthenticated: boolean;
+  loading: boolean;
 }
-
-const DEMO_USERS: Record<string, { user: User; password: string }> = {
-  'admin@volt.com': {
-    user: { id: '1', name: 'Administrador', email: 'admin@volt.com', role: 'admin' },
-    password: 'admin'
-  },
-  'vendedor@volt.com': {
-    user: { id: '2', name: 'Juan Vendedor', email: 'vendedor@volt.com', role: 'vendedor' },
-    password: 'vendedor'
-  },
-  'cliente@volt.com': {
-    user: { id: '3', name: 'Cliente Demo', email: 'cliente@volt.com', role: 'cliente' },
-    password: 'cliente'
-  },
-};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = (email: string, password: string): boolean => {
-    const demoUser = DEMO_USERS[email];
-    if (demoUser && demoUser.password === password) {
-      setUser(demoUser.user);
-      return true;
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      checkAuth();
+    } else {
+      setLoading(false);
     }
-    if (email && password) {
-      setUser({ id: '0', name: 'Usuario', email, role: 'cliente' });
-      return true;
+  }, []);
+
+  const checkAuth = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch('http://localhost:5000/api/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data);
+      } else {
+        localStorage.removeItem('token');
+      }
+    } catch (error) {
+      console.error('Error checking auth:', error);
+    } finally {
+      setLoading(false);
     }
-    return false;
+  };
+
+  const login = async (email: string, password: string): Promise<{ ok: boolean; error?: string }> => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('token', data.access_token);
+        setUser(data);
+        return { ok: true };
+      } else {
+        return { ok: false, error: data.error || 'Error de autenticación' };
+      }
+    } catch (error) {
+      return { ok: false, error: 'Error de conexión' };
+    }
   };
 
   const logout = () => {
+    localStorage.removeItem('token');
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, loading }}>
       {children}
     </AuthContext.Provider>
   );
