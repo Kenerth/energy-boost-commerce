@@ -1,134 +1,208 @@
 # Energy Boost Commerce
 
-**E-commerce de bebidas energéticas - Primer Avance del Proyecto (25%)**
+**E-commerce de bebidas energéticas - Proyecto Final (100%)**
 
 ---
 
 ## Descripción del Proyecto
 
-Energy Boost Commerce es una aplicación web tipo e-commerce especializada en la venta de bebidas energéticas. El proyecto sigue el **Modelo en Cascada** para su desarrollo y cumple con los requisitos del primer parcial (25% de avance).
+Energy Boost Commerce es una aplicación web tipo e-commerce especializada en la venta de bebidas energéticas. El proyecto fue desarrollado siguiendo el **Modelo en Cascada** para cumplir con los requisitos del curso de Ingeniería de Software.
 
 ### Características Implementadas
 
-| Módulo | Funcionalidad |
-|--------|---------------|
-| **Catálogo** | Lista de productos con filtros por categoría, búsqueda |
-| **Carrito** | Agregar, eliminar, modificar cantidad, cálculo de total con IVA |
-| **Checkout** | Simulación de pago con PayPal Sandbox |
-| **Roles** | Cliente, Administrador, Vendedor |
-| **Inventario** | Control de stock con alertas de mínimo |
-| **Reportes** | Gráficos de ventas, productos más vendidos |
+| Módulo | Funcionalidad | Estado |
+|--------|---------------|--------|
+| **Catálogo** | Lista de productos con filtros por categoría, búsqueda, precios dinámicos | ✅ |
+| **Carrito** | Agregar, eliminar, modificar cantidad, cálculo de total con IVA (16%) | ✅ |
+| **Checkout** | Simulación de pago con PayPal Sandbox, generación de pedido | ✅ |
+| **Factura PDF** | Generación automática de factura en PDF descargable | ✅ |
+| **Roles** | Cliente, Administrador, Vendedor con accesos diferenciados | ✅ |
+| **Inventario** | Control de stock con alertas de mínimo, resta automática al comprar | ✅ |
+| **Pedidos** | Estados (pendiente → processing → shipped → delivered/cancelled) | ✅ |
+| **Reportes** | Gráficos de ventas, productos más vendidos, inventario | ✅ |
+| **Proveedores** | Gestión de proveedores y compras para reponer inventario | ✅ |
+| **Backend API** | REST API con Flask + SQLite + JWT | ✅ |
 
 ---
 
-## Estructura del Proyecto
+## Arquitectura del Proyecto
 
 ```
 energy-boost-commerce/
-├── docs/                    # Documentación del proyecto
-│   ├── REQUISITOS.md       # Documento de requisitos
-│   ├── CASOS_DE_USO.md     # Diagrama de casos de uso
-│   └── DIAGRAMA_ER.md      # Diagrama entidad-relación
-├── src/
-│   ├── components/         # Componentes reutilizables
-│   ├── context/           # Contextos (Auth, Cart)
-│   ├── data/              # Datos simulados
-│   ├── pages/             # Páginas principales
-│   ├── types/             # Tipos TypeScript
-│   └── ...
+├── backend/                    # API REST (Flask + SQLite)
+│   ├── app.py                  # Entry point de Flask
+│   ├── config.py               # Configuración
+│   ├── models.py               # Modelos SQLAlchemy
+│   ├── API_DOCS.md             # Documentación de la API
+│   └── api/                    # Blueprints de endpoints
+│       ├── auth.py             # Autenticación
+│       ├── products.py          # Productos e inventario
+│       ├── cart.py             # Carrito y checkout
+│       ├── orders.py           # Pedidos y facturas
+│       ├── reports.py          # Estadísticas
+│       └── providers.py        # Proveedores
+│
+├── src/                       # Frontend (React + TypeScript)
+│   ├── components/            # Componentes reutilizables
+│   ├── context/               # Estado global (Auth, Cart)
+│   ├── pages/                 # Páginas principales
+│   └── types/                 # Tipos TypeScript
+│
+├── docs/                      # Documentación del proyecto
+│   ├── REQUISITOS.md          # Documento de requisitos
+│   ├── CASOS_DE_USO.md        # Diagrama de casos de uso
+│   ├── DIAGRAMA_ER.md         # Diagrama entidad-relación
+│   └── CRONOGRAMA.md          # Cronograma del proyecto
+│
 ├── package.json
-└── ...
-```
-
----
-
-## Cuentas de Prueba
-
-| Rol | Email | Contraseña |
-|-----|-------|------------|
-| Administrador | admin@volt.com | admin |
-| Vendedor | vendedor@volt.com | vendedor |
-| Cliente | cliente@volt.com | cliente |
-
----
-
-## Requisitos del Primer Parcial
-
-### 1. Documento de Requisitos
-- Catálogo de productos (12 productos iniciales)
-- Carrito de compras definido (agregar, eliminar, calcular total)
-- Roles de usuario: Cliente, Administrador, Vendedor
-- Inventario con alertas de stock mínimo
-- Reportes básicos (ventas por período, productos más vendidos)
-- Simulación de pagos
-
-### 2. Diagramas
-- **Casos de Uso**: Ver `docs/CASOS_DE_USO.md`
-- **Entidad-Relación**: Ver `docs/DIAGRAMA_ER.md`
-
-### 3. Justificación del Modelo en Cascada
-
-El modelo en cascada fue seleccionado porque:
-
-1. **Requisitos bien definidos**: Los requisitos están claramente especificados desde el inicio del proyecto académico.
-
-2. **Equipo pequeño**: Proyecto desarrollado por un solo programador, sin necesidad de metodologías ágiles iterativas.
-
-3. **Fases secuenciales obligatorias**: El modelo en cascada fuerza a completar cada fase antes de pasar a la siguiente:
-   - Análisis de Requisitos → Diseño Inicial → Implementación → Pruebas
-
-4. **Documentación requerida**: El modelo garantiza que toda la documentación esté lista antes de comenzar la codificación, evitando cambios costosos posteriores.
-
-5. **Entregables académicos específicos**: Las fases del modelo están alineadas con los porcentajes de avance del curso.
-
-### 4. Registro de Acuerdos del Equipo
-
-| Aspecto | Acuerdo |
-|---------|----------|
-| Alcance | E-commerce con catálogo, carrito, roles, inventario, reportes |
-| Roles definidos | Cliente (comprador), Admin (gestor), Vendedor (ventas) |
-| Tecnología | React + TypeScript + Vite + Tailwind CSS |
-| Datos | Simulados/ficticios para el prototipo |
-| Pagos | Solo simulación (PayPal Sandbox) |
-
----
-
-## Prototipo Navegable
-
-El software entregado incluye un prototipo funcional con:
-
-- **Pantalla de catálogo**: Muestra todos los productos con filtros por categoría y búsqueda
-- **Carrito de compras**: Funcionalidad completa de agregar/eliminar productos
-- **Roles de usuario**: Tres tipos de usuarios con paneles diferentes
-- **Panel de Administrador**: Dashboard con estadísticas, gráficos y gestión de inventario
-- **Panel de Vendedor**: Reportes de ventas y productos más vendidos
-- **Checkout**: Simulación de pago con PayPal Sandbox
-
----
-
-## Instalación y Ejecución
-
-```bash
-# Instalar dependencias
-npm install
-
-# Iniciar servidor de desarrollo
-npm run dev
-
-# Construir para producción
-npm run build
+├── iniciar.bat                # Script para ejecutar ambos servicios
+└── README.md
 ```
 
 ---
 
 ## Tecnologías Utilizadas
 
-- **Frontend**: React 18 + TypeScript
-- **Build**: Vite
-- **Estilos**: Tailwind CSS
-- **Gráficos**: Recharts
-- **Animaciones**: Framer Motion
-- **Rutas**: React Router DOM
+### Backend
+- **Python 3.14** + Flask 3.0
+- **SQLAlchemy** (ORM)
+- **SQLite** (Base de datos)
+- **Flask-JWT-Extended** (Autenticación)
+- **fpdf2** (Generación de PDFs)
+
+### Frontend
+- **React 18** + TypeScript
+- **Vite** (Build tool)
+- **Tailwind CSS** (Estilos)
+- **Recharts** (Gráficos)
+- **Framer Motion** (Animaciones)
+- **React Router DOM** (Rutas)
+- **Lucide React** (Iconos)
+
+---
+
+## Cuentas de Prueba
+
+| Rol | Email | Contraseña | Acceso |
+|-----|-------|------------|--------|
+| Administrador | admin@volt.com | admin | Panel Admin: /admin |
+| Vendedor | vendedor@volt.com | vendedor | Panel Ventas: /vendedor |
+| Cliente | cliente@volt.com | cliente | Catálogo, Carrito, Checkout |
+
+---
+
+## Cómo Ejecutar el Proyecto
+
+### Opción 1: Script automatizado (Windows)
+```bash
+# Ejecutar iniciar.bat que inicia ambos servicios
+iniciar.bat
+```
+
+### Opción 2: Manual
+
+**Backend:**
+```bash
+cd backend
+pip install -r requirements.txt
+python app.py
+```
+- API disponible en: `http://localhost:5000`
+- Health check: `http://localhost:5000/api/health`
+
+**Frontend:**
+```bash
+npm install
+npm run dev
+```
+- Frontend disponible en: `http://localhost:8080`
+
+---
+
+## Flujo de una Compra
+
+```
+1. Cliente inicia sesión
+2. Explora el catálogo (filtros por categoría)
+3. Agrega productos al carrito
+4. Revisa el carrito (cantidades, totales)
+5. Checkout → Simula pago con PayPal
+6. Sistema crea pedido → Resta stock automáticamente
+7. Cliente ve confirmación y puede descargar factura PDF
+8. Admin/Vendedor ven el pedido en sus paneles
+```
+
+---
+
+## Módulos del Sistema
+
+### 1. Autenticación (JWT)
+- Login con email/password
+- Token guardado en localStorage
+- Rutas protegidas según rol
+
+### 2. Catálogo de Productos
+- 12 productos iniciales en 5 categorías
+- Precios dinámicos (precio_base vs precio_descuento)
+- Filtros por categoría
+- Búsqueda por nombre
+- Stock en tiempo real
+
+### 3. Carrito de Compras
+- Persistencia en memoria del backend
+- Cálculo de subtotal, IVA (16%), total
+- Validación de stock disponible
+
+### 4. Checkout y Pedidos
+- Simulación PayPal Sandbox
+- Creación de pedido en DB
+- **Resta automática de stock al comprar**
+- Estados: pendiente → processing → shipped → delivered / cancelled
+- **Si se cancela, devuelve el stock**
+
+### 5. Factura PDF
+- Generada con librería fpdf2
+- Incluye: cliente, fecha, productos, cantidades, subtotal, IVA, total
+- Descargable desde pantalla de confirmación
+
+### 6. Panel Administrador (/admin)
+- Dashboard con estadísticas
+- Gestión de productos (CRUD)
+- Gestión de categorías
+- Ver todos los pedidos
+- Cambiar estado de pedidos
+- Ver reportes de ventas
+- Gestión de proveedores
+
+### 7. Panel Vendedor (/vendedor)
+- Dashboard de ventas
+- Ver productos y stock bajo
+- Ver pedidos
+- Reportes básicos
+
+### 8. Reportes
+- Ventas por período (mensual/semanal)
+- Productos más vendidos
+- Distribución por categoría
+- Resumen de inventario
+
+### 9. Proveedores
+- CRUD de proveedores
+- Registro de compras (reponer inventario)
+- Historial de compras
+
+---
+
+## Reglas de Negocio Implementadas
+
+- **RN-01**: El stock no puede ser negativo
+- **RN-02**: El precio debe ser mayor a 0
+- **RN-03**: Cuando stock < min_stock, generar alerta
+- **RN-04**: El IVA se calcula como 16% del subtotal
+- **RN-05**: Roles: cliente, administrador, vendedor
+- **RN-06**: Un cliente solo ve sus propios pedidos
+- **RN-07**: Un administrador puede ver todos los pedidos
+- **RN-08**: Al cancelar pedido, el stock se devuelve
 
 ---
 
@@ -138,12 +212,71 @@ npm run build
 |------|--------|
 | Análisis de Requisitos | ✅ Completado |
 | Diseño Inicial | ✅ Completado |
-| Documentación | ✅ Completado |
-| Prototipo Navegable | ✅ Completado |
+| Implementación | ✅ Completado |
+| Pruebas | ✅ Completado |
+| Despliegue | ✅ Completado |
 
-**Avance**: 25% (Primer Parcial)
+**Avance**: 100% (Entrega Final)
+
+---
+
+## API Endpoints
+
+### Autenticación
+- `POST /api/auth/login` - Login
+- `GET /api/auth/me` - Usuario actual
+- `GET /api/auth/usuarios` - Listar usuarios (Admin)
+
+### Productos
+- `GET /api/productos` - Listar productos
+- `POST /api/productos` - Crear producto (Admin)
+- `PUT /api/productos/<id>` - Actualizar (Admin)
+- `DELETE /api/productos/<id>` - Eliminar (Admin)
+
+### Carrito
+- `GET /api/cart` - Ver carrito
+- `POST /api/cart/items` - Agregar item
+- `POST /api/cart/checkout` - Finalizar compra
+
+### Pedidos
+- `GET /api/orders` - Mi historial
+- `GET /api/orders/all` - Todos los pedidos (Admin/Vendedor)
+- `PUT /api/orders/<id>/status` - Cambiar estado
+- `GET /api/pedidos/<id>/factura` - Descargar PDF
+
+### Reportes
+- `GET /api/reports/ventas` - Ventas
+- `GET /api/reports/dashboard` - Dashboard
+
+### Proveedores
+- `GET /api/proveedores` - Listar
+- `POST /api/proveedores` - Crear
+- `POST /api/proveedores/<id>/compras` - Registrar compra
+
+*Ver docs completos en `backend/API_DOCS.md`*
+
+---
+
+## Problemas Técnicas Resueltos
+
+1. **JWT Identity**: Flask-JWT-Extended requiere identidad como string → conversión a int al leer
+2. **Estructura del Carrito**: inconsistencia de datos entre componentes
+3. **Stock en Checkout**: implementación de lógica para restar stock automáticamente
+4. **CORS**: configuración con `supports_credentials=True`
+5. **Factura PDF**: generación con fpdf2 y descarga via fetch + blob
+
+---
+
+## Entregables del Proyecto
+
+- ✅ Código fuente completo
+- ✅ Base de datos SQLite con datos de ejemplo
+- ✅ Documentación técnica (API, modelos, casos de uso)
+- ✅ Diagramas (ER, Casos de Uso)
+- ✅ Cronograma actualizado
+- ✅ Manual de usuario (implícito en la UI)
 
 ---
 
 *Proyecto desarrollado como parte del curso de Ingeniería de Software*
-*Energy Boost Commerce - Abril 2026*
+*Energy Boost Commerce - Mayo 2026*

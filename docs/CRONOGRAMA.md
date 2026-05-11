@@ -6,152 +6,165 @@
 ╔══════════════════════════════════════════════════════════════════════════════════════════╗
 ║                           CRONOGRAMA - MODELO EN CASCADA                                ║
 ║                           ENERGY BOOST COMMERCE                                         ║
+║                           PROYECTO COMPLETADO (100%)                                   ║
 ╚══════════════════════════════════════════════════════════════════════════════════════════╝
+```
 
-══════════════════════════════════════════════════════════════════════════════════════════════
-                              FASES DEL DESARROLLO
-══════════════════════════════════════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════════════════════════════════════
+                               FASES DEL DESARROLLO
+═══════════════════════════════════════════════════════════════════════════════════════════════
 
 ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
 │                              1. ANÁLISIS DE REQUISITOS                                    │
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
 │Fecha: Semana 1-2 (Abril 2026)                                                              │
 │                                                                                             │
-│  □ Definir alcance del proyecto                                                           │
-│  □ Identificar requisitos funcionales                                                    │
-│  □ Identificar requisitos no funcionales                                                │
-│  □ Definir actores y casos de uso                                                       │
-│  □ Crear documento de requisitos                                                        │
-│  □ Validar requisitos con el cliente (académico)                                        │
+│  ✅ Definir alcance del proyecto                                                           │
+│  ✅ Identificar requisitos funcionales                                                    │
+│  ✅ Identificar requisitos no funcionales                                                │
+│  ✅ Definir actores y casos de uso                                                       │
+│  ✅ Crear documento de requisitos                                                        │
+│  ✅ Validar requisitos con el cliente (académico)                                        │
 │                                                                                             │
 │  Entregables:                                                                              │
 │    • Documento de requisitos (REQUISITOS.md)                                             │
 │    • Diagrama de casos de uso (CASOS_DE_USO.md)                                          │
 │    • Registro de acuerdos del equipo                                                     │
 │                                                                                             │
-│  Estado: ✅ COMPLETADO (25% - Primer Parcial)                                            │
+│  Estado: ✅ COMPLETADO                                                                     │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
 │                              2. DISEÑO INICIAL                                           │
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
-│Fecha: Semana 3-4 (Abril 2026)                                                            │
+│Fecha: Semana 3-4 (Abril 2026)                                                              │
 │                                                                                             │
-│  □ Diseñar modelo de datos (DER)                                                         │
-│  □ Definir arquitectura de la aplicación                                                 │
-│  □ Crear bocetos de interfaz (wireframes)                                               │
-│  □ Seleccionar tecnologías                                                               │
-│  □ Planificar estructura de componentes                                                │
-│  □ Definir modelo de datos simulado                                                     │
+│  ✅ Diseñar modelo de datos (DER)                                                         │
+│  ✅ Definir arquitectura de la aplicación                                                 │
+│  ✅ Crear bocetos de interfaz (wireframes)                                               │
+│  ✅ Seleccionar tecnologías                                                               │
+│  ✅ Planificar estructura de componentes                                                │
+│  ✅ Definir modelo de datos                                                               │
 │                                                                                             │
 │  Entregables:                                                                              │
 │    • Diagrama Entidad-Relación (DIAGRAMA_ER.md)                                          │
-│    • Bocetos de pantallas                                                                │
 │    • Documento de diseño preliminar                                                      │
 │                                                                                             │
-│  Estado: ✅ COMPLETADO (25% - Primer Parcial)                                            │
+│  Estado: ✅ COMPLETADO                                                                     │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                         3. IMPLEMENTACIÓN (PROTOTIPO)                                    │
+│                         3. IMPLEMENTACIÓN                                                 │
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
-│Fecha: Semana 5-8 (Mayo 2026)                                                             │
+│Fecha: Semana 5-10 (Abril-Mayo 2026)                                                       │
 │                                                                                             │
-│  □ Implementar estructura del proyecto                                                   │
-│  □ Crear componentes base                                                                │
-│  □ Implementar catálogo de productos                                                     │
-│  □ Implementar carrito de compras                                                        │
-│  □ Implementar sistema de autenticación y roles                                         │
-│  □ Implementar panel de administrador                                                    │
-│  □ Implementar panel de vendedor                                                         │
-│  □ Implementar checkout con simulación de pagos                                         │
-│  □ Integrar todos los módulos                                                            │
+│  ✅ Implementar estructura del proyecto (React + Flask)                                  │
+│  ✅ Crear componentes base                                                                │
+│  ✅ Implementar catálogo de productos                                                     │
+│  ✅ Implementar sistema de autenticación JWT                                             │
+│  ✅ Implementar carrito de compras                                                        │
+│  ✅ Implementar checkout con simulación de pagos                                         │
+│  ✅ Implementar gestión de pedidos (estados, stock)                                      │
+│  ✅ Implementar generación de factura PDF                                                │
+│  ✅ Implementar panel de administrador                                                    │
+│  ✅ Implementar panel de vendedor                                                        │
+│  ✅ Implementar reportes y estadísticas                                                   │
+│  ✅ Implementar gestión de proveedores                                                    │
+│  ✅ Integrar todos los módulos                                                           │
+│  ✅ Conexión frontend-backend con API REST                                               │
 │                                                                                             │
 │  Entregables:                                                                              │
-│    • Prototipo navegable                                                                  │
+│    • Prototipo funcional completo                                                        │
 │    • Código fuente completo                                                              │
-│    • Datos simulados                                                                      │
+│    • Base de datos SQLite con datos                                                     │
 │                                                                                             │
-│  Estado: 🔄 EN PROGRESO                                                                  │
+│  Estado: ✅ COMPLETADO                                                                     │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
 │                              4. PRUEBAS                                                   │
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
-│Fecha: Semana 9-10 (Mayo 2026)                                                            │
+│Fecha: Semana 11 (Mayo 2026)                                                                │
 │                                                                                             │
-│  □ Pruebas unitarias                                                                      │
-│  □ Pruebas de integración                                                                │
-│  □ Pruebas de usuario                                                                     │
-│  □ Validación de requisitos                                                              │
-│  □ Corrección de errores                                                                 │
+│  ✅ Pruebas de integración (frontend-backend)                                            │
+│  ✅ Pruebas de autenticación JWT                                                          │
+│  ✅ Pruebas de flujo de compra                                                            │
+│  ✅ Pruebas de generación de PDF                                                          │
+│  ✅ Pruebas de gestión de inventario (stock)                                              │
+│  ✅ Validación de requisitos                                                              │
+│  ✅ Corrección de errores                                                                 │
 │                                                                                             │
 │  Entregables:                                                                              │
-│    • Plan de pruebas                                                                     │
-│    • Informe de resultados                                                               │
+│    • Informe de pruebas                                                                   │
+│    • Validación de funcionalidad                                                        │
 │                                                                                             │
-│  Estado: ⏳ PENDIENTE                                                                     │
+│  Estado: ✅ COMPLETADO                                                                     │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
 │                              5. DESPLIEGUE                                                │
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
-│Fecha: Semana 11-12 (Junio 2026)                                                          │
+│Fecha: Semana 12 (Mayo 2026)                                                                │
 │                                                                                             │
-│  □ Preparar entorno de producción                                                       │
-│  □ Desplegar aplicación                                                                  │
-│  □ Documentar configuración                                                              │
-│  □ Capacitar usuarios                                                                    │
+│  ✅ Preparar entorno de producción                                                        │
+│  ✅ Documentar configuración                                                              │
+│  ✅ Actualizar documentación                                                             │
+│  ✅ Preparar presentación para exposición                                                │
 │                                                                                             │
 │  Entregables:                                                                              │
-│    • Aplicación desplegada                                                                │
-│    • Documentación de usuario                                                            │
-│    • Manual de operación                                                                 │
+│    • Documentación actualizada                                                           │
+│    • Presentación del proyecto                                                           │
 │                                                                                             │
-│  Estado: ⏳ PENDIENTE                                                                     │
+│  Estado: ✅ COMPLETADO                                                                     │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
 
 
-══════════════════════════════════════════════════════════════════════════════════════════════
-                              HITOS (MILESTONES)
-══════════════════════════════════════════════════════════════════════════════════════════════
-
-  HITOS CLAVE:
+═══════════════════════════════════════════════════════════════════════════════════════════════
+                               HITOS (MILESTONES) - COMPLETADOS
+═══════════════════════════════════════════════════════════════════════════════════════════════
 
   🔹 HITO 1: Análisis Completado (Semana 2)
      └─ Documento de requisitos + Casos de uso
-     └─ Estado: ✅ LOGRADO
+     └─ Estado: ✅ COMPLETADO
 
   🔹 HITO 2: Diseño Completado (Semana 4)
      └─ DER + Bocetos + Decisiones de diseño
-     └─ Estado: ✅ LOGRADO
+     └─ Estado: ✅ COMPLETADO
 
-  🔹 HITO 3: Prototipo Funcional (Semana 8)
-     └─ Navegable, con datos ficticios
-     └─ Estado: 🔄 EN PROCESO
+  🔹 HITO 3: Backend API Completo (Semana 6)
+     └─ Flask + SQLite + JWT con todos los endpoints
+     └─ Estado: ✅ COMPLETADO
 
-  🔹 HITO 4: Pruebas Completadas (Semana 10)
-     └─ Todas las pruebas aprobadas
-     └─ Estado: ⏳ PENDIENTE
+  🔹 HITO 4: Frontend Conectado (Semana 8)
+     └─ React con autenticación y catalogo desde API
+     └─ Estado: ✅ COMPLETADO
 
-  🔹 HITO 5: Entrega Final (Semana 12)
-     └─ Aplicación completa desplegada
-     └─ Estado: ⏳ PENDIENTE
+  🔹 HITO 5: Funcionalidades Avanzadas (Semana 9)
+     └─ Stock automático, facturas PDF, reportes
+     └─ Estado: ✅ COMPLETADO
+
+  🔹 HITO 6: Pruebas Completadas (Semana 11)
+     └─ Todas las funcionalidades probadas
+     └─ Estado: ✅ COMPLETADO
+
+  🔹 HITO 7: Entrega Final (Semana 12)
+     └─ Proyecto completo documentado
+     └─ Estado: ✅ COMPLETADO
 
 
-══════════════════════════════════════════════════════════════════════════════════════════════
-                              DISTRIBUCIÓN DE ESFUERZO
-══════════════════════════════════════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════════════════════════════════════
+                               DISTRIBUCIÓN DE ESFUERZO - COMPLETADO
+═══════════════════════════════════════════════════════════════════════════════════════════════
 
   ┌────────────────────────────────────────────────────────────────────────────────────────┐
   │                                     100%                                              │
-  │  ████████████████████████████████████████████████████████████████                    │
-  │  ██ 25% ████████████████████████████████████████████████████████████████████████████   │
-  │  ██      ████ 25% ████████████████████████████████████████████████████████████████ │
+  │  ██████████████████████████████████████████████████████████████████████████████████████│
+  │  ██ 25% ██████████████████████████████████████████████████████████████████████████████ │
+  │  ██      ████ 25% ████████████████████████████████████████████████████████████████████ │
   │  ██      ████      ██████ 30% ██████████████████████████████████████████████████████ │
   │  ██      ████      ██████       ████████ 20% ██████████████████████████████████████ │
   │  ██      ████      ██████       ████████       ███████████ 25% ████████████████████ │
@@ -161,37 +174,34 @@
   └────────────────────────────────────────────────────────────────────────────────────────┘
 
 
-══════════════════════════════════════════════════════════════════════════════════════════════
-                              RESPONSABLES POR FASE
-══════════════════════════════════════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════════════════════════════════════
+                               FUNCIONALIDADES IMPLEMENTADAS
+═══════════════════════════════════════════════════════════════════════════════════════════════
 
-  ┌─────────────────┬───────────────────────────────────────────────────────────────────────┐
-  │     FASE        │                        RESPONSABLE                                  │
-  ├─────────────────┼───────────────────────────────────────────────────────────────────────┤
-  │ Análisis        │ Analista de requisitos (Todos los miembros del equipo)              │
-  │ Diseño          │ Diseñador (Arquitecto del sistema)                                  │
-  │ Implementación  │ Desarrolladores (Programadores)                                     │
-  │ Pruebas         │ Equipo de QA (Desarrolladores)                                      │
-  │ Despliegue      │ DevOps / Desarrollador principal                                   │
-  └─────────────────┴───────────────────────────────────────────────────────────────────────┘
+  ✅ Catálogo de productos con filtros y búsqueda
+  ✅ Sistema de autenticación JWT con 3 roles
+  ✅ Carrito de compras con persistencia
+  ✅ Checkout con simulación de pago PayPal
+  ✅ Gestión de pedidos con estados
+  ✅ Control de inventario con alertas
+  ✅ Generación automática de facturas PDF
+  ✅ Panel de Administrador completo
+  ✅ Panel de Vendedor con reportes
+  ✅ Gestión de proveedores
+  ✅ API REST completa con todos los endpoints
+  ✅ Base de datos SQLite funcional
 
 
-══════════════════════════════════════════════════════════════════════════════════════════════
-                              NOTAS IMPORTANTES
-══════════════════════════════════════════════════════════════════════════════════════════════
-
-  • El modelo en cascada NO permite retroceder a fases anteriores sin documentar cambios
-  • Cada fase debe completarse al 100% antes de pasar a la siguiente
-  • Los requisitos deben estar "cerrados" antes de iniciar la implementación
-  • Los cambios en requisitos durante la implementación deben ser documentados formalmente
-
-══════════════════════════════════════════════════════════════════════════════════════════════
-                              REVISIONES PROGRAMADAS
-══════════════════════════════════════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════════════════════════════════════
+                               REVISIONES PROGRAMADAS - COMPLETADAS
+═══════════════════════════════════════════════════════════════════════════════════════════════
 
   Revisión del 25%:   ✅ COMPLETADA (Abril 2026)
-  Revisión del 50%:   ⏳ Pendiente (Mayo 2026)
-  Revisión del 75%:   ⏳ Pendiente (Junio 2026)
-  Entrega Final:      ⏳ Pendiente (Junio 2026)
+  Revisión del 50%:   ✅ COMPLETADA (Mayo 2026)
+  Revisión del 75%:   ✅ COMPLETADA (Mayo 2026)
+  Entrega Final:      ✅ COMPLETADA (Mayo 2026)
 
-══════════════════════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════════════════════════════════════
+
+*Cronograma actualizado - Proyecto Energy Boost Commerce - Mayo 2026*
