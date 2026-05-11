@@ -4,29 +4,57 @@ import { Button } from '@/components/ui/button';
 import { Zap, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { useAuth } from '@/context/AuthContext';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = login(email, password);
-    if (success) {
-      if (email === 'admin@volt.com' || email === 'vendedor@volt.com' || email === 'cliente@volt.com') {
-        toast.success(`Bienvenido, ${email.split('@')[0]}`);
-        if (email === 'admin@volt.com') navigate('/admin');
-        else if (email === 'vendedor@volt.com') navigate('/vendedor');
-        else navigate('/');
+    setLoading(true);
+
+    try {
+      // Login usando la API
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Guardar token
+        localStorage.setItem('token', data.access_token);
+        
+        toast.success('Bienvenido, ' + data.usuario?.nombre || email);
+        
+        // Pequeña pausa y luego redireccionar
+        setTimeout(() => {
+          if (data.usuario?.rol === 'administrador') navigate('/admin');
+          else if (data.usuario?.rol === 'vendedor') navigate('/vendedor');
+          else navigate('/');
+        }, 500);
+        
+        // Redireccionar según rol
+        if (data.usuario?.rol === 'administrador') {
+          navigate('/admin');
+        } else if (data.usuario?.rol === 'vendedor') {
+          navigate('/vendedor');
+        } else {
+          navigate('/');
+        }
       } else {
-        toast.success(isLogin ? '¡Bienvenido de vuelta!' : '¡Cuenta creada exitosamente!');
-        navigate('/');
+        toast.error(data.error || 'Error al iniciar sesión');
       }
+    } catch (error) {
+      toast.error('Error de conexión');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,7 +82,7 @@ const Login = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 bg-secondary/50 border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50"
-                required
+                required={!isLogin}
               />
             </div>
           )}
@@ -81,8 +109,8 @@ const Login = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider">
-            {isLogin ? 'ENTRAR' : 'REGISTRARSE'} <ArrowRight className="ml-2 h-4 w-4" />
+          <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider">
+            {loading ? 'CARGANDO...' : (isLogin ? 'ENTRAR' : 'REGISTRARSE')} <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
 
           <div className="space-y-2 text-xs text-muted-foreground">

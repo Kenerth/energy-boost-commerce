@@ -10,7 +10,8 @@ Endpoints:
 - GET /api/reports/dashboard - Dashboard completa (admin/vendedor)
 """
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
+from api.helpers import get_user_id
 from models import db, Pedido, PedidoDetalle, Producto, Usuario
 from sqlalchemy import func
 from datetime import datetime, timedelta
@@ -21,7 +22,7 @@ reports_bp = Blueprint('reports', __name__, url_prefix='/api/reports')
 
 def check_admin_or_vendedor():
     """Verifica si el usuario es admin o vendedor"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     return usuario and usuario.rol in ['administrador', 'vendedor']
 

@@ -1,22 +1,49 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/ProductCard';
 import { CategoryFilter } from '@/components/CategoryFilter';
-import { PRODUCTS } from '@/data/products';
-import { Category } from '@/types/store';
+import { Category, Product } from '@/types/store';
 import heroCan from '@/assets/hero-can.png';
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | 'all'>('all');
+  const [productos, setProductos] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProductos();
+  }, []);
+
+  const fetchProductos = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/productos');
+      const data = await response.json();
+      if (data.productos) {
+        setProductos(data.productos);
+      }
+    } catch (error) {
+      console.error('Error fetching productos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredProducts = selectedCategory === 'all'
-    ? PRODUCTS
-    : PRODUCTS.filter(p => p.category === selectedCategory);
+    ? productos
+    : productos.filter(p => p.categoria?.nombre === selectedCategory);
 
-  const featuredProducts = PRODUCTS.filter(p => p.featured);
+  const featuredProducts = productos.filter(p => p.featured);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-16 flex items-center justify-center">
+        <p className="text-primary">Cargando...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-16">
@@ -59,7 +86,6 @@ const Index = () => {
             />
           </motion.div>
         </div>
-        {/* Decorative gradient line */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       </section>
 

@@ -13,7 +13,8 @@ Endpoints:
 - GET /api/cart/checkout - Finalizar compra (crear pedido)
 """
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
+from api.helpers import get_user_id
 from models import db, Producto, Pedido, PedidoDetalle, Usuario
 
 # Constante de impuesto
@@ -34,7 +35,7 @@ def get_or_create_cart(usuario_id):
 @jwt_required()
 def get_cart():
     """Obtener carrito del usuario"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario:
@@ -61,7 +62,12 @@ def get_cart():
 @jwt_required()
 def add_to_cart():
     """Agregar producto al carrito"""
-    usuario_id = get_jwt_identity()
+    identity = get_user_id()
+    # Convertir a int si es string
+    try:
+        usuario_id = int(identity) if identity else None
+    except (ValueError, TypeError):
+        usuario_id = identity
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario:
@@ -99,7 +105,7 @@ def add_to_cart():
 @jwt_required()
 def update_cart_item(item_id):
     """Actualizar cantidad de un item"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     
     data = request.get_json()
     cantidad = data.get('cantidad')
@@ -126,7 +132,7 @@ def update_cart_item(item_id):
 @jwt_required()
 def remove_from_cart(item_id):
     """Eliminar item del carrito"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     
     result = remove_cart_item(usuario_id, item_id)
     
@@ -140,7 +146,7 @@ def remove_from_cart(item_id):
 @jwt_required()
 def clear_cart():
     """Vaciar carrito"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     
     clear_user_cart(usuario_id)
     
@@ -154,7 +160,7 @@ def checkout():
     Finalizar compra - Crea un pedido
     Estados: pending -> processing -> shipped -> delivered
     """
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario:

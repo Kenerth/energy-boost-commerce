@@ -11,8 +11,9 @@ Endpoints:
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token, create_refresh_token,
-    jwt_required, get_jwt_identity
+    jwt_required
 )
+from api.helpers import get_user_id
 from models import db, Usuario
 
 # Blueprint para autenticación
@@ -78,9 +79,9 @@ def login():
     if not usuario or not usuario.check_password(data['password']):
         return jsonify({'error': 'Credenciales inválidas'}), 401
     
-    # Crear token de acceso
-    access_token = create_access_token(identity=usuario.id)
-    refresh_token = create_refresh_token(identity=usuario.id)
+    # Crear token de acceso - convertir ID a string para evitar error JWT
+    access_token = create_access_token(identity=str(usuario.id))
+    refresh_token = create_refresh_token(identity=str(usuario.id))
     
     return jsonify({
         'mensaje': 'Login exitoso',
@@ -94,7 +95,7 @@ def login():
 @jwt_required(refresh=True)
 def refresh():
     """Refrescar token de acceso"""
-    identity = get_jwt_identity()
+    identity = get_user_id()
     access_token = create_access_token(identity=identity)
     return jsonify({'access_token': access_token}), 200
 
@@ -103,7 +104,7 @@ def refresh():
 @jwt_required()
 def get_current_user():
     """Obtener información del usuario actual"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario:
@@ -116,7 +117,7 @@ def get_current_user():
 @jwt_required()
 def update_current_user():
     """Actualizar información del usuario actual"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario:
@@ -143,7 +144,7 @@ def update_current_user():
 @jwt_required()
 def list_usuarios():
     """Listar todos los usuarios (solo admin)"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario or usuario.rol != 'administrador':
@@ -159,7 +160,7 @@ def list_usuarios():
 @jwt_required()
 def delete_usuario(user_id):
     """Eliminar usuario (solo admin)"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario or usuario.rol != 'administrador':

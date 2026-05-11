@@ -13,7 +13,8 @@ Endpoints:
 - POST /api/categorias - Crear categoría (admin)
 """
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
+from api.helpers import get_user_id
 from models import db, Producto, Categoria, Usuario
 
 # Blueprint para productos
@@ -22,7 +23,7 @@ products_bp = Blueprint('products', __name__, url_prefix='/api')
 
 def check_admin():
     """Verifica si el usuario es administrador"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     return usuario and usuario.rol == 'administrador'
 
@@ -184,7 +185,7 @@ def delete_producto(producto_id):
 @jwt_required()
 def get_low_stock():
     """Obtener productos con stock bajo (solo admin/vendedor)"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario or usuario.rol not in ['administrador', 'vendedor']:
@@ -206,7 +207,7 @@ def get_low_stock():
 @jwt_required()
 def update_stock(producto_id):
     """Actualizar stock de un producto (admin/vendedor)"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario or usuario.rol not in ['administrador', 'vendedor']:

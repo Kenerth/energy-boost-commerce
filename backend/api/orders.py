@@ -11,7 +11,8 @@ Endpoints:
 Estados: pendiente -> processing -> shipped -> delivered / cancelled
 """
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
+from api.helpers import get_user_id
 from models import db, Pedido, Usuario, PedidoDetalle
 
 # Estados válidos del pedido
@@ -25,7 +26,7 @@ orders_bp = Blueprint('orders', __name__, url_prefix='/api')
 @jwt_required()
 def list_orders():
     """Ver historial de pedidos del usuario"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     
     # Obtener parámetros
     estado = request.args.get('estado')
@@ -49,7 +50,7 @@ def list_orders():
 @jwt_required()
 def get_order(pedido_id):
     """Ver detalle de un pedido"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     pedido = Pedido.query.get(pedido_id)
@@ -68,7 +69,7 @@ def get_order(pedido_id):
 @jwt_required()
 def list_all_orders():
     """Ver todos los pedidos (admin/vendedor)"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario or usuario.rol not in ['administrador', 'vendedor']:
@@ -97,7 +98,7 @@ def list_all_orders():
 @jwt_required()
 def update_order_status(pedido_id):
     """Cambiar estado del pedido (admin/vendedor)"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     
     if not usuario or usuario.rol not in ['administrador', 'vendedor']:

@@ -42,7 +42,7 @@ export function CartDrawer() {
               ) : (
                 items.map((item) => (
                   <motion.div
-                    key={item.product.id}
+                    key={item.id || item.producto_id || Math.random()}
                     layout
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -50,28 +50,28 @@ export function CartDrawer() {
                     className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="font-heading text-xs font-semibold truncate">{item.product.name}</p>
-                      <p className="text-xs text-muted-foreground">${item.product.price.toFixed(2)} c/u</p>
+                      <p className="font-heading text-xs font-semibold truncate">{item.nombre || 'Producto'}</p>
+                      <p className="text-xs text-muted-foreground">${(item.precio || 0).toFixed(2)} c/u</p>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <button
-                        onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.id, item.cantidad - 1)}
                         className="p-1 rounded bg-muted hover:bg-muted/80 text-foreground"
                       >
                         <Minus className="h-3 w-3" />
                       </button>
-                      <span className="w-6 text-center text-sm font-bold">{item.quantity}</span>
+                      <span className="w-6 text-center text-sm font-bold">{item.cantidad}</span>
                       <button
-                        onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.id, item.cantidad + 1)}
                         className="p-1 rounded bg-muted hover:bg-muted/80 text-foreground"
                       >
                         <Plus className="h-3 w-3" />
                       </button>
                     </div>
                     <span className="font-heading text-sm font-bold text-primary w-16 text-right">
-                      ${(item.product.price * item.quantity).toFixed(2)}
+                      ${((item.precio || 0) * item.cantidad).toFixed(2)}
                     </span>
-                    <button onClick={() => removeItem(item.product.id)} className="p-1 text-destructive hover:text-destructive/80">
+                    <button onClick={() => removeItem(item.id)} className="p-1 text-destructive hover:text-destructive/80">
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </motion.div>

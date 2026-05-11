@@ -62,12 +62,12 @@ const Checkout = () => {
             <div className="glass-card rounded-lg p-4 space-y-3">
               <h3 className="font-heading text-sm font-semibold tracking-wider text-muted-foreground">RESUMEN DEL PEDIDO</h3>
               {items.map(item => (
-                <div key={item.product.id} className="flex justify-between items-center py-2 border-b border-border/30 last:border-0">
+                <div key={item.id || item.producto_id || Math.random()} className="flex justify-between items-center py-2 border-b border-border/30 last:border-0">
                   <div>
-                    <p className="text-sm font-medium">{item.product.name}</p>
-                    <p className="text-xs text-muted-foreground">x{item.quantity}</p>
+                    <p className="text-sm font-medium">{item.nombre || 'Producto'}</p>
+                    <p className="text-xs text-muted-foreground">x{item.cantidad || 1}</p>
                   </div>
-                  <span className="font-heading text-sm font-bold">${(item.product.price * item.quantity).toFixed(2)}</span>
+                  <span className="font-heading text-sm font-bold">${((item.precio || 0) * (item.cantidad || 1)).toFixed(2)}</span>
                 </div>
               ))}
             </div>

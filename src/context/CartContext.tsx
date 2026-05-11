@@ -49,10 +49,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         const data = await response.json();
-        setItems(data.items || []);
+        // Validar que los items tengan los campos necesarios
+        const validItems = (data.items || []).filter((item: any) => 
+          item && (item.id || item.producto_id) && (item.nombre || item.producto_nombre)
+        );
+        setItems(validItems);
       }
     } catch (error) {
       console.error('Error fetching cart:', error);
+      setItems([]); // Limpiar en caso de error
     }
   };
 

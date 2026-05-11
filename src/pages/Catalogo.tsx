@@ -1,21 +1,49 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ProductCard } from '@/components/ProductCard';
 import { CategoryFilter } from '@/components/CategoryFilter';
-import { PRODUCTS } from '@/data/products';
 import { Category } from '@/types/store';
 import { Search } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Product } from '@/types/store';
 
 const Catalogo = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | 'all'>('all');
   const [search, setSearch] = useState('');
+  const [productos, setProductos] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = PRODUCTS.filter(p => {
-    const matchCat = selectedCategory === 'all' || p.category === selectedCategory;
-    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.description.toLowerCase().includes(search.toLowerCase());
+  useEffect(() => {
+    fetchProductos();
+  }, []);
+
+  const fetchProductos = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/productos');
+      const data = await response.json();
+      if (data.productos) {
+        setProductos(data.productos);
+      }
+    } catch (error) {
+      console.error('Error fetching productos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filtered = productos.filter(p => {
+    const matchCat = selectedCategory === 'all' || p.categoria?.nombre === selectedCategory;
+    const matchSearch = p.nombre?.toLowerCase().includes(search.toLowerCase()) ||
+      p.descripcion?.toLowerCase().includes(search.toLowerCase());
     return matchCat && matchSearch;
   });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+        <p className="text-primary">Cargando...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-16">

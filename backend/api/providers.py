@@ -12,7 +12,8 @@ Endpoints:
 - GET /api/proveedores/<id>/compras - Ver historial de compras
 """
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
+from api.helpers import get_user_id
 from models import db, Proveedor, CompraProveedor, Producto, Usuario
 from datetime import datetime
 
@@ -22,7 +23,7 @@ providers_bp = Blueprint('providers', __name__, url_prefix='/api/proveedores')
 
 def check_admin():
     """Verifica si el usuario es administrador"""
-    usuario_id = get_jwt_identity()
+    usuario_id = get_user_id()
     usuario = Usuario.query.get(usuario_id)
     return usuario and usuario.rol == 'administrador'
 

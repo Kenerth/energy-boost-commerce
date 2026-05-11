@@ -14,7 +14,7 @@ class Config:
     # Seguridad
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-energy-boost-2026')
     
-    # JWT Configuración
+    # JWT Configuración - permitir números
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'jwt-secret-key-energy-boost-2026')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)

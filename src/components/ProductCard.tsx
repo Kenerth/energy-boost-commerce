@@ -19,6 +19,11 @@ export function ProductCard({ product }: ProductCardProps) {
     shots: 'bg-red-500/10 text-red-400 border-red-500/30',
   };
 
+  const categoria = product.categoria?.nombre || 'clasicas';
+  const precio = product.precio || product.precio_base;
+  const tieneDescuento = product.tiene_descuento || product.precio_descuento > 0;
+  const precioOriginal = product.precio_base;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -34,36 +39,44 @@ export function ProductCard({ product }: ProductCardProps) {
             DESTACADO
           </span>
         )}
-        {product.stock < 50 && (
+        {product.stock < (product.min_stock || 50) && (
           <span className="absolute top-2 left-2 bg-destructive/80 text-destructive-foreground text-xs font-bold px-2 py-1 rounded-sm">
-            ¡Últimas!
+            BAJO STOCK
           </span>
         )}
       </div>
 
       <div className="p-4 space-y-3">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-heading text-sm font-semibold tracking-wide">{product.name}</h3>
-          <span className="font-heading text-lg font-bold text-primary">${product.price.toFixed(2)}</span>
+          <h3 className="font-heading text-sm font-semibold tracking-wide">{product.nombre}</h3>
+          <div className="text-right">
+            {tieneDescuento && (
+              <span className="text-xs text-muted-foreground line-through">
+                ${precioOriginal?.toFixed(2)}
+              </span>
+            )}
+            <span className="font-heading text-lg font-bold text-primary">${precio?.toFixed(2)}</span>
+          </div>
         </div>
 
-        <p className="text-xs text-muted-foreground line-clamp-2">{product.description}</p>
+        <p className="text-xs text-muted-foreground line-clamp-2">{product.descripcion}</p>
 
         <div className="flex items-center gap-2 flex-wrap">
-          <span className={`text-xs px-2 py-0.5 rounded-full border ${categoryColors[product.category] || ''}`}>
-            {product.category}
+          <span className={`text-xs px-2 py-0.5 rounded-full border ${categoryColors[categoria] || ''}`}>
+            {categoria}
           </span>
-          <span className="text-xs text-muted-foreground">{product.volume}</span>
-          <span className="text-xs text-muted-foreground">☕ {product.caffeine}</span>
+          <span className="text-xs text-muted-foreground">{product.volumen}</span>
+          <span className="text-xs text-muted-foreground">☕ {product.cafeina}</span>
         </div>
 
         <Button
           onClick={() => addItem(product.id)}
           className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-heading text-xs tracking-wider"
           size="sm"
+          disabled={product.stock === 0}
         >
           <ShoppingCart className="h-3.5 w-3.5 mr-1.5" />
-          AGREGAR
+          {product.stock === 0 ? 'AGOTADO' : 'AGREGAR'}
         </Button>
       </div>
     </motion.div>
