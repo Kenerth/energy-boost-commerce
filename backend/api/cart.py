@@ -214,7 +214,7 @@ def checkout():
     db.session.add(pedido)
     db.session.commit()
     
-    # Crear detalles del pedido
+    # Crear detalles del pedido y restar stock
     for det in detalles:
         detalle = PedidoDetalle(
             pedido_id=pedido.id,
@@ -227,9 +227,12 @@ def checkout():
         
         # Restar del stock
         producto = Producto.query.get(det['producto_id'])
+        stock_anterior = producto.stock
         producto.stock -= det['cantidad']
+        print(f"[CHECKOUT] Stock producto {producto.id}: {stock_anterior} -> {producto.stock} (resté {det['cantidad']})")
     
     db.session.commit()
+    print(f"[CHECKOUT] Pedido {pedido.id} creado, stock actualizado")
     
     # Vaciar carrito
     clear_user_cart(usuario_id)

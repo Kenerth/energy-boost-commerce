@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Legend } from 'recharts';
 import { Package, DollarSign, ShoppingCart, Users, TrendingUp, AlertTriangle, Calendar } from 'lucide-react';
-import { PRODUCTS, getLowStockProducts, getProductStockStatus } from '@/data/products';
 
 const salesData = [
   { mes: 'Ene', ventas: 4200 }, { mes: 'Feb', ventas: 5800 }, { mes: 'Mar', ventas: 4900 },
@@ -35,8 +34,6 @@ const topProductsData = [
   { name: 'VOLT Black Gold', ventas: 89, ingresos: 533.11 },
 ];
 
-const lowStockProducts = getLowStockProducts();
-
 function StatCard({ icon: Icon, label, value, trend }: { icon: React.ComponentType<{ className?: string }>; label: string; value: string; trend?: string }) {
   return (
     <motion.div
@@ -55,8 +52,41 @@ function StatCard({ icon: Icon, label, value, trend }: { icon: React.ComponentTy
 }
 
 const Admin = () => {
-  const totalStock = PRODUCTS.reduce((sum, p) => sum + p.stock, 0);
-  const totalValue = PRODUCTS.reduce((sum, p) => sum + (p.price * p.stock), 0);
+  const [productos, setProductos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProductos = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      
+      try {
+        const res = await fetch('http://localhost:5000/api/productos', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.productos) {
+          setProductos(data.productos);
+        }
+      } catch (err) {
+        console.error('Error fetching productos:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProductos();
+  }, []);
+
+  const totalStock = productos.reduce((sum, p) => sum + (p.stock || 0), 0);
+  const totalValue = productos.reduce((sum, p) => sum + ((p.precio || 0) * (p.stock || 0)), 0);
+  const productosBajoStock = productos.filter(p => (p.stock || 0) < (p.min_stock || 50));
+  const getProductStockStatus = (p: any) => {
+    const stock = p.stock || 0;
+    const min = p.min_stock || 50;
+    if (stock >= min) return 'disponible';
+    if (stock >= min * 0.5) return 'medio';
+    return 'bajo';
+  };
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -121,20 +151,20 @@ const Admin = () => {
             </ResponsiveContainer>
           </div>
 
-          {lowStockProducts.length > 0 && (
+          {productosBajoStock.length > 0 && (
             <div className="glass-card rounded-lg p-5">
               <h3 className="font-heading text-sm font-semibold tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 text-neon-orange" />
                 STOCK BAJO
               </h3>
               <div className="space-y-3">
-                {lowStockProducts.map(p => (
+                {productosBajoStock.slice(0, 5).map(p => (
                   <div key={p.id} className="flex items-center justify-between py-2 border-b border-border/30 last:border-0">
                     <div>
-                      <p className="text-sm font-medium">{p.name}</p>
-                      <p className="text-xs text-muted-foreground">{p.category}</p>
+                      <p className="text-sm font-medium">{p.nombre}</p>
+                      <p className="text-xs text-muted-foreground">{p.categoria?.nombre || 'Sin categoría'}</p>
                     </div>
-                    <span className={`text-xs font-heading font-bold px-2 py-1 rounded ${p.stock < (p.minStock || 50) * 0.5 ? 'bg-destructive/20 text-destructive' : 'bg-neon-orange/20 text-neon-orange'}`}>
+                    <span className={`text-xs font-heading font-bold px-2 py-1 rounded ${p.stock < (p.min_stock || 50) * 0.5 ? 'bg-destructive/20 text-destructive' : 'bg-neon-orange/20 text-neon-orange'}`}>
                       {p.stock} uds
                     </span>
                   </div>
@@ -168,7 +198,7 @@ const Admin = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">Total productos</span>
-                <span className="font-heading font-bold">{PRODUCTS.length}</span>
+                <span className="font-heading font-bold">{productos.length}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">Total unidades</span>
@@ -180,8 +210,8 @@ const Admin = () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">Productos bajo stock</span>
-                <span className={`font-heading font-bold ${lowStockProducts.length > 0 ? 'text-neon-orange' : 'text-neon-green'}`}>
-                  {lowStockProducts.length}
+                <span className={`font-heading font-bold ${productosBajoStock.length > 0 ? 'text-neon-orange' : 'text-neon-green'}`}>
+                  {productosBajoStock.length}
                 </span>
               </div>
             </div>
@@ -203,13 +233,15 @@ const Admin = () => {
                 </tr>
               </thead>
               <tbody>
-                {PRODUCTS.map(p => (
+                {loading ? (
+                  <tr><td colSpan={6} className="py-4 text-center text-muted-foreground">Cargando...</td></tr>
+                ) : productos.map(p => (
                   <tr key={p.id} className="border-b border-border/20 hover:bg-secondary/30">
-                    <td className="py-2.5 font-medium">{p.name}</td>
-                    <td className="py-2.5 text-muted-foreground capitalize">{p.category.replace('-', ' ')}</td>
-                    <td className="py-2.5 text-right font-heading">${p.price.toFixed(2)}</td>
+                    <td className="py-2.5 font-medium">{p.nombre}</td>
+                    <td className="py-2.5 text-muted-foreground capitalize">{p.categoria?.nombre || 'Sin categoría'}</td>
+                    <td className="py-2.5 text-right font-heading">${(p.precio || 0).toFixed(2)}</td>
                     <td className="py-2.5 text-right">{p.stock}</td>
-                    <td className="py-2.5 text-right text-muted-foreground">{p.minStock || 50}</td>
+                    <td className="py-2.5 text-right text-muted-foreground">{p.min_stock || 50}</td>
                     <td className="py-2.5 text-right">
                       <span className={`text-xs px-2 py-0.5 rounded-full ${
                         getProductStockStatus(p) === 'disponible' ? 'bg-neon-green/10 text-neon-green' :

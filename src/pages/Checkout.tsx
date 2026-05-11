@@ -2,23 +2,65 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
-import { CreditCard, CheckCircle, Loader2 } from 'lucide-react';
+import { CreditCard, CheckCircle, Loader2, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
-  const { items, subtotal, tax, total, clearCart } = useCart();
+  const { items, subtotal, tax, total, clearCart, checkout } = useCart();
   const [step, setStep] = useState<'review' | 'payment' | 'success'>('review');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pedidoId, setPedidoId] = useState<number | null>(null);
   const navigate = useNavigate();
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     setLoading(true);
-    // Simulate PayPal sandbox
-    setTimeout(() => {
+    setError(null);
+    
+    try {
+      const result = await checkout();
+      
+      if (result.ok) {
+        setPedidoId(result.pedidoId || null);
+        setStep('success');
+      } else {
+        setError(result.error || 'Error al procesar el pedido');
+        setLoading(false);
+      }
+    } catch (err) {
+      setError('Error de conexión');
       setLoading(false);
-      setStep('success');
-      clearCart();
-    }, 2500);
+    }
+  };
+
+  const handleDownloadInvoice = async () => {
+    const token = localStorage.getItem('token');
+    if (!pedidoId || !token) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/pedidos/${pedidoId}/factura`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.error('Error al descargar factura:', response.status);
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `factura_pedido_${pedidoId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error al descargar factura:', error);
+    }
   };
 
   if (items.length === 0 && step !== 'success') {
@@ -42,9 +84,20 @@ const Checkout = () => {
           <h2 className="font-heading text-2xl font-bold neon-text">¡PAGO EXITOSO!</h2>
           <p className="text-muted-foreground">Tu pedido ha sido procesado correctamente.</p>
           <p className="text-xs text-muted-foreground">(Simulación PayPal Sandbox)</p>
-          <Button onClick={() => navigate('/')} className="bg-primary text-primary-foreground font-heading tracking-wider">
-            VOLVER AL INICIO
-          </Button>
+          {pedidoId && (
+            <p className="text-sm text-muted-foreground">Pedido #{pedidoId}</p>
+          )}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-4">
+            {pedidoId && (
+              <Button onClick={handleDownloadInvoice} variant="outline" className="font-heading tracking-wider">
+                <FileText className="h-4 w-4 mr-2" />
+                Descargar Factura
+              </Button>
+            )}
+            <Button onClick={() => navigate('/')} className="bg-primary text-primary-foreground font-heading tracking-wider">
+              VOLVER AL INICIO
+            </Button>
+          </div>
         </motion.div>
       </div>
     );
@@ -123,6 +176,11 @@ const Checkout = () => {
               </div>
             </div>
 
+            {error && (
+              <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-sm text-destructive text-center">
+                {error}
+              </div>
+            )}
             <Button
               onClick={handlePayment}
               disabled={loading}

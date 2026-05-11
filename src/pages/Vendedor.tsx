@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
 import { DollarSign, ShoppingCart, TrendingUp, Package, AlertTriangle, User } from 'lucide-react';
-import { PRODUCTS } from '@/data/products';
 
 const salesData = [
   { mes: 'Ene', ventas: 4200 }, { mes: 'Feb', ventas: 5800 }, { mes: 'Mar', ventas: 4900 },
@@ -31,8 +30,6 @@ const categorySales = [
   { name: 'Shots', value: 9 },
 ];
 
-const lowStockProducts = PRODUCTS.filter(p => p.stock < 50);
-
 function StatCard({ icon: Icon, label, value, trend }: { icon: React.ComponentType<{ className?: string }>; label: string; value: string; trend?: string }) {
   return (
     <motion.div
@@ -51,6 +48,33 @@ function StatCard({ icon: Icon, label, value, trend }: { icon: React.ComponentTy
 }
 
 const Vendedor = () => {
+  const [productos, setProductos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProductos = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      
+      try {
+        const res = await fetch('http://localhost:5000/api/productos', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.productos) {
+          setProductos(data.productos);
+        }
+      } catch (err) {
+        console.error('Error fetching productos:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProductos();
+  }, []);
+
+  const productosBajoStock = productos.filter(p => (p.stock || 0) < (p.min_stock || 50));
+
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="container mx-auto px-4">
@@ -67,7 +91,7 @@ const Vendedor = () => {
           <StatCard icon={DollarSign} label="Ventas del mes" value="$36,700" trend="12.5%" />
           <StatCard icon={ShoppingCart} label="Pedidos" value="278" trend="8.2%" />
           <StatCard icon={TrendingUp} label="Ticket promedio" value="$132" />
-          <StatCard icon={Package} label="Productos" value={String(PRODUCTS.length)} />
+          <StatCard icon={Package} label="Productos" value={loading ? '...' : String(productos.length)} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -141,18 +165,18 @@ const Vendedor = () => {
           </div>
         </div>
 
-        {lowStockProducts.length > 0 && (
+        {productosBajoStock.length > 0 && (
           <div className="glass-card rounded-lg p-5 mt-6">
             <h3 className="font-heading text-sm font-semibold tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-neon-orange" />
               PRODUCTOS CON STOCK BAJO
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {lowStockProducts.map(p => (
+              {productosBajoStock.map(p => (
                 <div key={p.id} className="flex items-center justify-between p-3 bg-destructive/10 rounded-lg border border-destructive/20">
                   <div>
-                    <p className="text-sm font-medium">{p.name}</p>
-                    <p className="text-xs text-muted-foreground">{p.category}</p>
+                    <p className="text-sm font-medium">{p.nombre}</p>
+                    <p className="text-xs text-muted-foreground">{p.categoria?.nombre || 'Sin categoría'}</p>
                   </div>
                   <span className="text-xs font-heading font-bold text-destructive px-2 py-1 bg-destructive/20 rounded">
                     {p.stock} uds

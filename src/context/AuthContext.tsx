@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         const data = await response.json();
-        setUser(data);
+        setUser(data);  // La API /me devuelve el usuario directamente
       } else {
         localStorage.removeItem('token');
       }
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         localStorage.setItem('token', data.access_token);
-        setUser(data);
+        setUser(data.usuario);  // Guardar solo el objeto usuario
         return { ok: true };
       } else {
         return { ok: false, error: data.error || 'Error de autenticación' };

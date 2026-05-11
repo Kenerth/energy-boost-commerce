@@ -31,7 +31,7 @@ def create_app(config_name='default'):
     
     # Inicializar extensiones
     db.init_app(app)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
     JWTManager(app)
     
     # Registrar blueprints

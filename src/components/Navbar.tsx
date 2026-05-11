@@ -15,13 +15,27 @@ export function Navbar() {
     setMobileOpen(false);
   };
 
-  const getRoleLabel = (role: string) => {
+  // Función para obtener el rol del usuario dinámicamente
+  const getUserRole = () => {
+    if (!user) return 'cliente';
+    // Intentar varios campos posibles
+    return user.rol || user.role || user.tipo || 'cliente';
+  };
+
+  // Función para obtener el nombre del usuario
+  const getUserName = () => {
+    if (!user) return '';
+    return user.nombre || user.name || user.email || '';
+  };
+
+  const roleLabel = (() => {
+    const role = getUserRole();
     switch (role) {
       case 'admin': return 'Administrador';
       case 'vendedor': return 'Vendedor';
       default: return 'Cliente';
     }
-  };
+  })();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/50">
@@ -35,19 +49,28 @@ export function Navbar() {
           <Link to="/" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Inicio</Link>
           <Link to="/catalogo" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Catálogo</Link>
           
-          {isAuthenticated ? (
+          {isAuthenticated && user ? (
             <div className="flex items-center gap-4">
-              {user?.role === 'admin' && (
-                <Link to="/admin" className="text-sm font-medium text-neon-cyan hover:text-primary transition-colors">Admin</Link>
+              {/* Botones de acceso a paneles - más visibles */}
+              {getUserRole() === 'admin' && (
+                <Link to="/admin" className="px-3 py-1.5 bg-neon-cyan/10 text-neon-cyan rounded-md text-sm font-medium hover:bg-neon-cyan/20 transition-colors border border-neon-cyan/30">
+                  Panel Admin
+                </Link>
               )}
-              {user?.role === 'vendedor' && (
-                <Link to="/vendedor" className="text-sm font-medium text-neon-cyan hover:text-primary transition-colors">Ventas</Link>
+              {getUserRole() === 'vendedor' && (
+                <Link to="/vendedor" className="px-3 py-1.5 bg-primary/10 text-primary rounded-md text-sm font-medium hover:bg-primary/20 transition-colors border border-primary/30">
+                  Panel Ventas
+                </Link>
               )}
+              
+              {/* Mostrar nombre del usuario */}
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <User className="h-4 w-4" />
-                <span>{getRoleLabel(user?.role || 'cliente')}</span>
+                <span>{getUserName()}</span>
               </div>
-              <button onClick={logout} className="text-sm font-medium text-muted-foreground hover:text-destructive transition-colors flex items-center gap-1">
+              
+              {/* Botón de cerrar sesión */}
+              <button onClick={handleLogout} className="text-sm font-medium text-muted-foreground hover:text-destructive transition-colors flex items-center gap-1">
                 <LogOut className="h-4 w-4" /> Salir
               </button>
             </div>
@@ -88,11 +111,16 @@ export function Navbar() {
             <div className="p-4 flex flex-col gap-3">
               <Link to="/" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground hover:text-primary">Inicio</Link>
               <Link to="/catalogo" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground hover:text-primary">Catálogo</Link>
-              {isAuthenticated ? (
+              {isAuthenticated && user ? (
                 <>
-                  {user?.role === 'admin' && <Link to="/admin" onClick={() => setMobileOpen(false)} className="text-sm text-neon-cyan">Panel Admin</Link>}
-                  {user?.role === 'vendedor' && <Link to="/vendedor" onClick={() => setMobileOpen(false)} className="text-sm text-neon-cyan">Panel Ventas</Link>}
-                  <button onClick={handleLogout} className="text-sm text-muted-foreground hover:text-destructive text-left">Cerrar Sesión</button>
+                  {getUserRole() === 'admin' && <Link to="/admin" onClick={() => setMobileOpen(false)} className="text-sm text-neon-cyan">Panel Admin</Link>}
+                  {getUserRole() === 'vendedor' && <Link to="/vendedor" onClick={() => setMobileOpen(false)} className="text-sm text-neon-cyan">Panel Ventas</Link>}
+                  <div className="text-sm text-muted-foreground">
+                    {getUserName()}
+                  </div>
+                  <button onClick={handleLogout} className="text-sm text-muted-foreground hover:text-destructive text-left flex items-center gap-2">
+                    <LogOut className="h-4 w-4" /> Cerrar Sesión
+                  </button>
                 </>
               ) : (
                 <Link to="/login" onClick={() => setMobileOpen(false)} className="text-sm text-muted-foreground hover:text-primary">Cuenta</Link>

@@ -21,7 +21,7 @@ interface CartContextType {
   total: number;
   itemCount: number;
   loading: boolean;
-  checkout: () => Promise<{ ok: boolean; error?: string }>;
+  checkout: () => Promise<{ ok: boolean; error?: string; pedidoId?: number }>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -159,7 +159,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const toggleCart = () => setIsOpen(!isOpen);
 
-  const checkout = async (): Promise<{ ok: boolean; error?: string }> => {
+  const checkout = async (): Promise<{ ok: boolean; error?: string; pedidoId?: number }> => {
     const token = getToken();
     if (!token) return { ok: false, error: 'No autenticado' };
 
@@ -178,7 +178,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (response.ok) {
         setItems([]);
         setIsOpen(false);
-        return { ok: true };
+        return { ok: true, pedidoId: data.pedido?.id };
       } else {
         return { ok: false, error: data.error || 'Error al procesar pedido' };
       }
